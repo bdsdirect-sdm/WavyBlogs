@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useQuery, useMutation } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "../api/axiosInstance";
 import "../styling/createwave.css";
 import Local from "../environment/env";
@@ -7,47 +7,42 @@ import Button from '../common/components/CommonButton';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast } from "react-toastify";
-import { queryClient } from "../main";
+// const [event, setEvent] = useState(0); // 1 for add 2 for edit
 
 const Dashboard: React.FC = () => {
   const token = localStorage.getItem("token");
   const [getwave, setGetwave] = useState<any>({});
   const [getfriend, setGetfriend] = useState<any>({});
   const [show, setShow] = useState(0);
-  // const [event, setEvent] = useState(0); // 1 for add 2 for edit
+  const [comments, setComments] = useState<any>([]);
 
   const validationSchema = Yup.object().shape({
     comment: Yup.string().required("comment is required"),
     waveId: Yup.string().required()
   });
 
-  if(getwave){
-    console.log(getwave?.photo);
-    console.log(getwave?.video);
-  }
-  
+  const queryClient = useQueryClient();
 
-  const getComments = async() => {
+  const getComments = async(waveId:any) => {
     try{
-       const response = await api.get(`${Local.GET_COMMENTS}`, {
+      const response = await api.get(`${Local.GET_COMMENTS}/${waveId}`, {
         headers:{
           "Authorization": `Bearer ${token}`
         }
-       });
-
-       return response?.data?.comments;
+      });
+      setComments(response.data.comments);
+      return response?.data;
     }
     catch(err:any){
       toast.error(err.response.data.message);
     }
   }
-  
-  const {data:comments, isLoading:commentLoading, isError:commentisError, error:commentError} = useQuery({
-    queryKey: ['comments'],
-    queryFn: getComments
-});
 
-console.log(comments);
+  useEffect(()=>{
+    if(getwave?.uuid){
+        getComments(getwave?.uuid);
+    }
+  }, [getwave])
 
   const getLatestWaves = async () => {
     try {
@@ -86,15 +81,15 @@ console.log(comments);
     queryFn: getMyFriends,
   });
 
-
   const addComment = async(data:any) => {
     try{
-      const response = await api.post(`${Local.ADD_COMMENT}`, {data}, {
+      const response = await api.post(`${Local.ADD_COMMENT}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
           },
       })
       toast.success(`${response.data.message}`);
+      await getComments(data.waveId);
       queryClient.invalidateQueries({
         queryKey: ["comments"]
       })
@@ -108,43 +103,21 @@ console.log(comments);
     mutationFn: addComment,
   })
 
-  // const updateCommentMutation = useMutation({
-  //   mutationFn: updateComment,
-  // })
-
-  if (isLoading || friendloading || commentLoading) {
+  if (isLoading || friendloading) {
     return <div>Loading...</div>;
   }
 
-  if (isError || friendiserror || commentisError) {
+  if (isError || friendiserror) {
     return (
       <div>
-        Error: {error?.message} {frienderror?.message} {commentError?.message}
+        Error: {error?.message} {frienderror?.message} 
       </div>
     );
   }
 
   const addCommentHandle = (values:any) => {
-    // console.log(values);
     addCommentMutation.mutate(values);
   }
-
-  // const deleteComment = async(commentId:any) => {
-  //   try{
-  //     const response = await api.put(`${Local.DELETE_COMMENT}/${commentId}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //         }
-  //     });
-  //     toast.success(`${response.data.message}`);
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["comments"]
-  //       });
-  //   }
-  //   catch(err:any){
-  //     console.log(err.response.data.message);
-  //   }
-  // }
 
   return (
     <>
@@ -535,10 +508,10 @@ console.log(comments);
                   <p className="ms-5 text-white fs-5 fw-semibold">
                     {getwave?.user_wave?.firstname}{" "}
                     {getwave?.user_wave?.lastname}
-                    <p className=" text-white pt-0 mt-0 fw-light fs-6">
+                    <blockquote className=" text-white pt-0 mt-0 fw-light fs-6">
                       {" "}
                       {getwave?.user_wave?.email}{" "}
-                    </p>
+                    </blockquote>
                   </p>
                 </div>
               </div>
@@ -598,7 +571,7 @@ console.log(comments);
                     )}
                     {show==1 && (
                         <div  >
-                              <Formik
+                              {/* <Formik
                               initialValues={{
                                 comment: "",
                                 waveId: getwave?.uuid
@@ -621,30 +594,54 @@ console.log(comments);
                                       <ErrorMessage name="comment" component="div" className="text-danger ms-5" />
                                   </div>
                                 </Form>
-                              </Formik>
+                              </Formik> */}
+                              <Formik
+                          initialValues={{
+                            comment: "",
+                            waveId: getwave?.uuid
+                            }}
+                            validationSchema={validationSchema}
+                            onSubmit={addCommentHandle}
+                          >
+                            <Form >
+                              <div className="d-flex flex-wrap" >
+                                <button className='btn btn-close mt-1 pt-3 me-2' onClick={()=>{setShow(0)}} />
+                                  <Field type="text" name="comment" className='form-control border-2 w-50 ' placeholder='Enter your comment' />
+                                  <Field type="text" name="waveId" hidden/>
+                                  <button type="submit" className=' ms-2 p-2 rounded btn-clr text-white border-0' >
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
+                                          <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
+                                      </svg>
+                                  </button>
+                              </div>
+                              <div>
+                                  <ErrorMessage name="comment" component="div" className="text-danger ms-5" />
+                              </div>
+                            </Form>
+                          </Formik>
                         </div>
                     )}
               </div>
 
               <div
-                className="ms-4 text-secondary me-2 overflow-auto comments "
+                className="ms-4 text-secondary me-2 pb-2 overflow-auto comments "
                 style={{ maxHeight: "150px" }} // Adjust the maxHeight as needed
                 >
                   {comments?.map((comment:any)=>(
                     (comment?.user_comment?.uuid == friends?.user?.uuid)?(
-                      <p className="mb-0 pb-1 row">
+                      <div className="mb-0 pb-1 row">
                         <div className="col-10" >
-                          <b>Jasmine : </b>wefgkweimf
+                          <b>{comment?.user_comment?.firstname} {comment?.user_comment?.lastname} : </b>{comment?.comment}
                         </div>
                         <div className="col-2 p-0" >
                           <div className="text-primary" >
-                            <span > Edit </span> | <span > Delete </span>
+                            {/* <span > Edit </span> | <span > Delete </span> */}
                           </div>
                         </div>
-                      </p>
+                      </div>
                     ):(
                     <p className="mb-0 pb-1">
-                        <b>Jasmdfgrine : </b>wefgkweimf
+                        <b>{comment?.user_comment?.firstname} {comment?.user_comment?.lastname} : </b>{comment?.comment}
                     </p>)
                   ))}
 

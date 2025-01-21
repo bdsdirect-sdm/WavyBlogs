@@ -7,11 +7,12 @@ import { toast } from 'react-toastify'
 import '../styling/profile.css'
 import api from '../api/axiosInstance' 
 import Local from '../environment/env'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { queryClient } from '../main'
 
 const Profile: React.FC = () => {
   const [activeTab, setActiveTab] = useState(1) // 1 for basic details & 2 for personal details
+  const fileInputRef = useRef(null);
 
   const updateBasic = async (data: any) => {
     try {
@@ -69,12 +70,7 @@ const Profile: React.FC = () => {
     }
   }
 
-  const {
-    data: user,
-    isLoading,
-    error,
-    isError
-  } = useQuery({
+  const {data: user, isLoading, error, isError } = useQuery({
     queryKey: ['profile'],
     queryFn: getProfile,
   })
@@ -89,6 +85,30 @@ const Profile: React.FC = () => {
 
   const updateProfileHandler = (values: any) => {
     updateProfileMutation.mutate(values)
+  }
+
+  const updatePhoto = async(data:any) => {
+    try{
+      const response = await api.post(`${Local.UPDATE_PROFILE_PHOTO}`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['profile'],
+      })
+      return;
+    }
+    catch(err:any){
+      toast.error(`${err.response.data.message}`)
+      return;
+    }
+  }
+
+  const profile_photo_update = async(photo:any) => {
+    const formData = new FormData();
+    formData.append('profile_photo', photo);
+    updatePhoto(formData);
   }
 
   return (
@@ -127,6 +147,10 @@ const Profile: React.FC = () => {
             Upload a New Photo
           </p>
           {/* Add button here for upload picture */}
+          
+          <button className='btn btn-light h-11 w-44 ms-[43vw] mt-[-11px]' onClick={()=>fileInputRef?.current?.click()} >Change Picture</button>
+          <input ref={fileInputRef} type="file" accept='image/jpg, image/png, image/jpeg' hidden onChange={(e:any)=>{profile_photo_update(e.currentTarget.files[0])}} />
+
         </div>
       </div>
 

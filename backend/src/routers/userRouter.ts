@@ -13,6 +13,7 @@ import { userLogin, userList, Register, addorUpdatePreference,getUserPreference,
     updatePersonalUser} from "../controllers/userController";
 import userAuthMiddleware from "../middlewares/userAuth";
 import { uploadWave } from "../utils/uploadWave";
+import { uploadProfile } from "../utils/uploadProfilePhoto";
 
 const router = Router();
 
@@ -24,12 +25,13 @@ router.post('/updatepreference', userAuthMiddleware, addorUpdatePreference);
 router.post('/addcomment', userAuthMiddleware, addComment);
 router.post('/updatepersonaldetails', userAuthMiddleware, updatePersonalUser);
 router.post('/updatebasicdetails', userAuthMiddleware, updateBasicUser);
+router.post('/updateprofilephoto', userAuthMiddleware, uploadProfile.single('profile_photo'), updateProfilePhoto);
 
 router.get('/getmywave', userAuthMiddleware, getMyWaves);
 router.get('/getprofile', userAuthMiddleware, getUser);
 router.get('/getrequests', userAuthMiddleware, getRequests);
 router.get('/getlatestwaves', userAuthMiddleware, getLatestWaves);
-router.get('/getcomments', userAuthMiddleware, getComments);
+router.get('/getcomments/:waveId', userAuthMiddleware, getComments);
 router.get('/getpreference', userAuthMiddleware, getUserPreference);
 router.get('/getfriendlist', userAuthMiddleware, userList);
 

@@ -50,7 +50,7 @@ export const userLogin = async(req:any, res:Response) => {
     try{
         const {email, password} = req.body.formData;
         const {data} = req.body;
-        console.log(data);
+        // console.log(data);
         const user = await User.findOne({where: {email: email}});
         if(!user){
             res.status(401).json({'message': 'Invalid email'});
@@ -71,15 +71,15 @@ export const userLogin = async(req:any, res:Response) => {
                     });
                     if (invite) {
                         const friendinfo = invite.split('_');
-                        console.log("friendinfo----->", friendinfo);
+                        // console.log("friendinfo----->", friendinfo);
                         const friend = await Friend.create({
                             user_1_Id: user.uuid,
                             user_2_Id: friendinfo[1],
                         });
-                        console.log("Friend", friend);
+                        // console.log("Friend", friend);
                         if (friend) {
                             const request = await Request.findOne({where:{url:data}});
-                            console.log("request----->", request)
+                            // console.log("request----->", request)
                             if (request) {
                                 await request.update({
                                     request_status:1
@@ -103,7 +103,7 @@ export const Register = async(req:any, res:any) => {
     try{
         const {firstname, lastname, email, password, phone} = req.body.formData;
         const {data} = req.body;
-        console.log("data--->", data);
+        // console.log("data--->", data);
 
         const isExist = await User.findOne({where: {email: email}});
         if(isExist){
@@ -128,15 +128,15 @@ export const Register = async(req:any, res:any) => {
 
             if (invite) {
                 const friendinfo = invite.split('_');
-                console.log("friendinfo----->", friendinfo);
+                // console.log("friendinfo----->", friendinfo);
                 const friend = await Friend.create({
                     user_1_Id: user.uuid,
                     user_2_Id: friendinfo[3]
                 })
-                console.log("friend----->", friend);
+                // console.log("friend----->", friend);
                 if(friend){
                     const request = await Request.findOne({where:{url:data}});
-                    console.log("huhu===>", request)
+                    // console.log("huhu===>", request)
                     if(request){
                         await request.update({
                             request_status: 1,
@@ -200,31 +200,19 @@ export const updatePersonalUser = async(req:any, res:Response) => {
     }
 }
 
-
-
-
-
-
-
-
-
 // post request
-// pending
 export const updateProfilePhoto = async(req:any, res:Response) => {
     try{
         const {uuid} = req.user;
-        
-
+        const user = await User.findByPk(uuid);
+        const updatedUser = await user?.update({profile_photo: req.file.path}); 
+        res.status(200).json({"message": "Profile photo updated successfully"});
+    
     }
     catch(err){
         res.status(500).json({'message': 'Something went wrong'});
     }
 }
-
-
-
-
-
 
 // post request
 export const addorUpdatePreference = async(req:any, res:Response) => {
@@ -284,11 +272,11 @@ export const inviteFriend = async(req:any, res:Response) => {
         const {uuid} = req.user;
         const friends = req.body;
         const user:any = await User.findByPk(uuid);
-        console.log("====>", friends);
+        // console.log("====>", friends);
         await friends.map(async(friend:any)=>{
             
             let existedUser = await User.findOne({where:{ email:friend.email }});
-            console.log(friend);
+            // console.log(friend);
             const firstname = friend.name.split(' ')[0];
             const lastname = friend.name.split(' ')[1];
             if(existedUser){
@@ -388,7 +376,7 @@ export const createWave = async(req:any, res:any) => {
         }
     }
     catch(err){
-        console.log(err);
+        // console.log(err);
         return res.status(500).json({"message":`Something went wrong ${err}`});
     }
 }
@@ -399,7 +387,7 @@ export const getMyWaves = async(req:any, res:any) => {
         const {uuid} = req.user;
         const search = req.query.find;
         const orderBy = req.query.orderBy;
-        console.log(req.query);
+        // console.log(req.query);
         const waves = await Wave.findAll({where: {[Op.and]:[
             {[Op.or]:[
                 {text: {[Op.like]: `%${search}%`}},
@@ -459,7 +447,7 @@ export const getLatestWaves = async(req:any, res:Response):Promise<any> => {
 export const getComments = async(req:any, res:Response):Promise<any> => {
     try{
         const {uuid} = req.user;
-        const {waveId} = req.body;
+        const {waveId} = req.params;
         const comments = await Comment.findAll({
             where: {
                 waveId: {
@@ -486,7 +474,7 @@ export const getRequests = async(req:any, res:any) => {
         const {uuid} = req.user;
         const search = req.query.find;
         const orderBy = req.query.orderBy;
-        console.log(req.query);
+        // console.log(req.query);
         const requests = await Request.findAll({where: {[Op.and]:[
             {sent_by:uuid},
             {[Op.or]:[
@@ -506,7 +494,7 @@ export const getRequests = async(req:any, res:any) => {
 export const addComment = async(req:any, res:Response):Promise<any> =>{
     try{
         const {uuid} = req.user;
-        const {comment, waveId } = req.body.data;
+        const {comment, waveId } = req.body;
         const newcomment = await Comment.create({
             comment,
             waveId,

@@ -2,16 +2,37 @@ import React, {useEffect} from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import "../styling/sidebar2.css"; // Optional for additional styles
 import Local from "../environment/env";
+import { useQuery } from "@tanstack/react-query";
+import api from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const Sidebar2: React.FC = () => {
   
   const navigate = useNavigate();
-  const user = JSON.parse(`${localStorage.getItem('user')}`);
   useEffect(()=>{
       if(!localStorage.getItem('token')){
         navigate('/login');
       }
     },[]);
+
+    const getProfile = async () => {
+      try {
+        const response = await api.get(`${Local.GET_PROFILE}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        return response.data.user
+      } catch (err: any) {
+        toast.error(`${err.response.data.message}`)
+      }
+    }
+  
+    const {data: user, isLoading, error, isError } = useQuery({
+      queryKey: ['profile'],
+      queryFn: getProfile,
+    })
 
   const Logout = () => {  
       if (localStorage.getItem('token')) {
@@ -26,6 +47,14 @@ const Sidebar2: React.FC = () => {
         else if (hours < 18) return "Good Afternoon";
         return "Good Evening";
       };
+
+      if(isLoading){
+        return (<div>Loading...</div>);
+      }
+
+      if(isError){
+        return (<div>Failed to load user data</div>);
+      }
 
   return (
     <div className="d-flex vh-100">

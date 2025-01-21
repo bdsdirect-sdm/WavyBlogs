@@ -19,6 +19,7 @@ interface config{
     GET_PROFILE: string;
     UPDATE_PERSONAL_USER_DETAIL: string;
     UPDATE_BASIC_USER_DETAIL: string;
+    UPDATE_PROFILE_PHOTO: string;
 }
 // console.log("--------->", import.meta.env.VITE_BASE_URL)
 const Local:config = {
@@ -42,6 +43,7 @@ const Local:config = {
     GET_PROFILE: import.meta.env.VITE_GET_PROFILE,
     UPDATE_PERSONAL_USER_DETAIL: import.meta.env.VITE_UPDATE_PERSONAL_USER_DETAIL,
     UPDATE_BASIC_USER_DETAIL: import.meta.env.VITE_UPDATE_BASIC_USER_DETAIL,
+    UPDATE_PROFILE_PHOTO: import.meta.env.VITE_UPDATE_PROFILE_PHOTO
 }
 
 export default Local
