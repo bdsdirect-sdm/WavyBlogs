@@ -97,7 +97,7 @@ const Profile: React.FC = () => {
 
       <div className='mx-2 mt-2 rounded'>
         <div className='d-flex justify-content-between align-items-center cw-clr py-4 rounded-top-2'>
-          <h1 className='fw-bold mx-auto cw-clr display-1 '>Create Waves</h1>
+          <h1 className='fw-bold mx-auto cw-clr display-1 '>My PROFILE</h1>
         </div>
       </div>
 
@@ -123,10 +123,10 @@ const Profile: React.FC = () => {
               aria-expanded='false'
             />
           )}
-          <p className='mt-4 ms-4 text-white fs-5 fw-semibold'>
-            {' '}
-            {user?.firstname} {user?.lastname}{' '}
+          <p className=' mt-[-20px] ms-4 text-white fs-5 fw-semibold'>
+            Upload a New Photo
           </p>
+          {/* Add button here for upload picture */}
         </div>
       </div>
 
