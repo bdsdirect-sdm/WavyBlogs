@@ -1,0 +1,51 @@
+.cw-clr{
+    background: #C5B084;
+    color: #B89C674D;
+}
+
+.details{
+    position: relative;
+    top: -30px;
+    left: -20px
+}
+
+video::part(control){
+    padding: 0px 5px 0px 105px;
+}
+
+.basic-details{
+    position: relative;
+    left: -25px
+}
+
+.main-img-div{
+    position: absolute;
+}
+
+.photo{
+    position: relative;
+    top: -40px;
+    z-index: 1;
+    /* transform: translate(0px, -40px); */
+}
+
+.snd-rel-div{
+    position: relative;
+    top: -60px;
+    z-index: 0;
+}
+
+
+.cmn-clr{
+    color: #BEA16E
+}
+
+
+.btn-clr{
+    background-color: #476692
+}
+
+.CI{
+    position: relative;
+    top: -70px;
+}
