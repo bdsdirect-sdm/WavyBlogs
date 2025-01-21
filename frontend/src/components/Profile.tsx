@@ -5,7 +5,7 @@ import Button from '../common/components/CommonButton';
 import { basicValidatorSchema, personalValidatorSchema } from '../yup/Validator'
 import { toast } from 'react-toastify'
 import '../styling/profile.css'
-import api from '../api/axiosInstance'
+import api from '../api/axiosInstance' 
 import Local from '../environment/env'
 import React, { useState } from 'react'
 import { queryClient } from '../main'
