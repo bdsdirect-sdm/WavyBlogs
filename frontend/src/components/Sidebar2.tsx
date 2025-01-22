@@ -10,7 +10,7 @@ const Sidebar2: React.FC = () => {
   
   const navigate = useNavigate();
   useEffect(()=>{
-      if(!localStorage.getItem('token')){
+      if(!localStorage.getItem('token') && !(localStorage.getItem('isAdmin'))){
         navigate('/login');
       }
     },[]);
@@ -29,7 +29,7 @@ const Sidebar2: React.FC = () => {
       }
     }
   
-    const {data: user, isLoading, error, isError } = useQuery({
+    const {data: user, isLoading, isError } = useQuery({
       queryKey: ['profile'],
       queryFn: getProfile,
     })
@@ -80,7 +80,7 @@ const Sidebar2: React.FC = () => {
             </svg>
         </div>
 
-        <nav className="nav flex-column mt-2 ms-3 ">
+        <nav className="nav flex-column mt-2 ms-3 whitespace-nowrap ">
           <NavLink
             to="/app/dashboard"
             className={({ isActive }) =>

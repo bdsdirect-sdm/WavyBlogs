@@ -5,7 +5,7 @@ const GoBack:React.FC<any> = ({text}) => {
   const navigate = useNavigate();
   return (
     <p
-        className="h5 pb-3 d-flex bg-secondary-subtle"
+        className="h5 pb-3 d-flex bg-secondary-subtle w-[15rem] h-9 ps-2"
         onClick={() => {navigate(-1);}}
       >
         <svg

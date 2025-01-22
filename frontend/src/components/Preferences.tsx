@@ -67,13 +67,13 @@ const Preferences:React.FC = () => {
     height_in: data?.preference?.height_in || "cm",
     blood_glucose_in: data?.preference?.blood_glucose_in || "mg/dl",
     cholesterol_in: data?.preference?.cholesterol_in || "mg/dl",
-    blood_pressure_in: data?.preference?.pressure_in || "mmHg",
+    blood_pressure_in: data?.preference?.blood_pressure_in || "mmHg",
     distance_in: data?.preference?.distance_in || "km",
-    system_email: data?.preference?.system_email || false,
-    sms: data?.preference?.sms || true,
-    post: data?.preference?.post || true,
-    member_services_email: data?.preference?.member_services_email || true,
-    phone_call: data?.preference?.phone_call || false
+    system_email: data?.preference?.system_email,
+    sms: data?.preference?.sms==false?false:true,
+    post: data?.preference?.post==false?false:true,
+    member_services_email: data?.preference?.member_services_email==false?false:true,
+    phone_call: data?.preference?.phone_call
   };
 
   const validationSchema = Yup.object({

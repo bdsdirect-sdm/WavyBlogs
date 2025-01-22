@@ -148,7 +148,7 @@ const Profile: React.FC = () => {
           </p>
           {/* Add button here for upload picture */}
           
-          <button className='btn btn-light h-11 w-44 ms-[43vw] mt-[-11px]' onClick={()=>fileInputRef?.current?.click()} >Change Picture</button>
+          <button className='btn btn-light h-11 w-44 ms-[32vw] mt-[-11px]' onClick={()=>fileInputRef?.current?.click()} >Change Picture</button>
           <input ref={fileInputRef} type="file" accept='image/jpg, image/png, image/jpeg' hidden onChange={(e:any)=>{profile_photo_update(e.currentTarget.files[0])}} />
 
         </div>

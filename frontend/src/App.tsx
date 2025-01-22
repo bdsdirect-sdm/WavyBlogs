@@ -2,7 +2,6 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import React from 'react';
 import Sidebar1 from './components/Sidebar1';
 import Signup from './components/Signup';
 import Login from './components/Login';
@@ -14,6 +13,9 @@ import CreateWave from './components/CreateWave';
 import Friends from './components/Friends';
 import ChangePassword from './components/ChangePassword';
 import InviteFriend from './components/InviteFriend';
+import AdminSignup from './components/Admin/AdminSignup';
+import AdminOutlet from './components/Admin/AdminOutlet';
+import AdminLogin from './components/Admin/AdminLogin';
 
 const App:React.FC = () => {
 
@@ -71,6 +73,21 @@ const App:React.FC = () => {
         {
           path: '/app/invite-friends',
           element: <InviteFriend />
+        }
+      ]
+    },
+    {
+      path: '/admin',
+      element: <AdminOutlet />,
+      children:
+        [
+        {
+          path: '/admin',
+          element: <AdminSignup />
+        },
+        {
+          path: '/admin/login',
+          element: <AdminLogin />
         }
       ]
     }

@@ -46,7 +46,7 @@ export const userList = async(req:any, res:Response):Promise<any> => {
 }
 
 // post request
-export const userLogin = async(req:any, res:Response) => {
+export const userLogin = async(req:any, res:Response):Promise<any> => {
     try{
         const {email, password} = req.body.formData;
         const {data} = req.body;
@@ -56,40 +56,44 @@ export const userLogin = async(req:any, res:Response) => {
             res.status(401).json({'message': 'Invalid email'});
         }
         else{
-            const isValid = await bcrypt.compare(password, user.password);
-            if(!isValid){
-                res.status(401).json({'message': 'Wrong password'});
-            }
-            else{
-                // const token = jwt.sign({uuid: user.uuid}, SECRET_KEY, {expiresIn: '1h'});
-                if(data){
-                    const invite:any = jwt.verify(data, SECRET_KEY, (err:any, info:any)=>{
-                        if(err){
-                            return 0;
-                        }
-                         return info;
-                    });
-                    if (invite) {
-                        const friendinfo = invite.split('_');
-                        // console.log("friendinfo----->", friendinfo);
-                        const friend = await Friend.create({
-                            user_1_Id: user.uuid,
-                            user_2_Id: friendinfo[1],
+            if(user?.is_login){
+                return res.status(401).json({'message': 'User already logged in'});
+            } else {
+                const isValid = await bcrypt.compare(password, user.password);
+                if(!isValid){
+                    res.status(401).json({'message': 'Wrong password'});
+                }
+                else{
+                    // const token = jwt.sign({uuid: user.uuid}, SECRET_KEY, {expiresIn: '1h'});
+                    if(data){
+                        const invite:any = jwt.verify(data, SECRET_KEY, (err:any, info:any)=>{
+                            if(err){
+                                return 0;
+                            }
+                             return info;
                         });
-                        // console.log("Friend", friend);
-                        if (friend) {
-                            const request = await Request.findOne({where:{url:data}});
-                            // console.log("request----->", request)
-                            if (request) {
-                                await request.update({
-                                    request_status:1
-                                });
+                        if (invite) {
+                            const friendinfo = invite.split('_');
+                            // console.log("friendinfo----->", friendinfo);
+                            const friend = await Friend.create({
+                                user_1_Id: user.uuid,
+                                user_2_Id: friendinfo[1],
+                            });
+                            // console.log("Friend", friend);
+                            if (friend) {
+                                const request = await Request.findOne({where:{url:data}});
+                                // console.log("request----->", request)
+                                if (request) {
+                                    await request.update({
+                                        request_status:1
+                                    });
+                                }
                             }
                         }
                     }
+                    const token = jwt.sign({uuid: user.uuid}, SECRET_KEY);
+                    res.status(200).json({'message': 'Login successful', "token": token, "user":user});
                 }
-                const token = jwt.sign({uuid: user.uuid}, SECRET_KEY);
-                res.status(200).json({'message': 'Login successful', "token": token, "user":user});
             }
         }
     }

@@ -3,6 +3,7 @@ import express from 'express';
 import sequelize from './config/db';
 import cors from 'cors';
 import userRouter from './routers/userRouter';
+import adminRouter from './routers/adminRouter';
 import Request from './models/Request';
 
 const app = express();
@@ -11,6 +12,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(cors());
 app.use(express.json());
 app.use('/', userRouter);
+app.use('/', adminRouter);
 
 sequelize.sync({alter:false}).then(()=>{
     console.log('Database connected');

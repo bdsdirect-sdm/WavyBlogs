@@ -25,6 +25,7 @@ const Signup:React.FC = () => {
             const response = await api.post(`${Local.AUTH_USER}`, {formData, data});
             toast.success(response.data.message);
             localStorage.setItem("token", response.data.token);
+            localStorage.setItem("isAdmin", response.data.isAdmin);
             localStorage.setItem("user", JSON.stringify(response.data.user));
             navigate('/app/dashboard')
         }

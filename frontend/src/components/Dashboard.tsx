@@ -115,8 +115,9 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  const addCommentHandle = (values:any) => {
+  const addCommentHandle = (values:any,{resetForm}:{resetForm:any}) => {
     addCommentMutation.mutate(values);
+    resetForm();
   }
 
   return (
@@ -570,32 +571,8 @@ const Dashboard: React.FC = () => {
                         </div>
                     )}
                     {show==1 && (
-                        <div  >
-                              {/* <Formik
-                              initialValues={{
-                                comment: "",
-                                waveId: getwave?.uuid
-                                }}
-                                validationSchema={validationSchema}
-                                onSubmit={addCommentHandle}
-                              >
-                                <Form >
-                                  <div className="d-flex flex-wrap" >
-                                    <button className='btn btn-close mt-1 pt-3 me-2' onClick={()=>{setShow(0)}} />
-                                      <Field type="text" name="comment" className='form-control border-2 w-50 ' placeholder='Enter your comment' />
-                                      <Field type="text" name="waveId" hidden/>
-                                      <button type="submit" className=' ms-2 p-2 rounded btn-clr text-white border-0' >
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                              <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76z"/>
-                                          </svg>
-                                      </button>
-                                  </div>
-                                  <div>
-                                      <ErrorMessage name="comment" component="div" className="text-danger ms-5" />
-                                  </div>
-                                </Form>
-                              </Formik> */}
-                              <Formik
+                        <div>
+                          <Formik
                           initialValues={{
                             comment: "",
                             waveId: getwave?.uuid

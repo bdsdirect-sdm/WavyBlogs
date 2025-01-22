@@ -7,7 +7,9 @@ class Admin extends Model{
     public firstname!: string;
     public lastname!: string;
     public email!: string;
+    public password!: string;
     public status!: boolean;
+    public is_login!: boolean
     public isDeleted!: boolean;
     public deletedAt!: Date;
 }
@@ -30,6 +32,14 @@ Admin.init({
     email:{
         type: DataTypes.STRING,
         allowNull: false
+    },
+    password:{
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    is_login:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
     },
     status: {
         type: DataTypes.BOOLEAN,
