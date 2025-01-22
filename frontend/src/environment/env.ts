@@ -20,6 +20,9 @@ interface config{
     UPDATE_PERSONAL_USER_DETAIL: string;
     UPDATE_BASIC_USER_DETAIL: string;
     UPDATE_PROFILE_PHOTO: string;
+    AUTH_ADMIN: string;
+    REGISTER_ADMIN: string;
+    USER_LOGOUT: string;
 }
 // console.log("--------->", import.meta.env.VITE_BASE_URL)
 const Local:config = {
@@ -43,7 +46,10 @@ const Local:config = {
     GET_PROFILE: import.meta.env.VITE_GET_PROFILE,
     UPDATE_PERSONAL_USER_DETAIL: import.meta.env.VITE_UPDATE_PERSONAL_USER_DETAIL,
     UPDATE_BASIC_USER_DETAIL: import.meta.env.VITE_UPDATE_BASIC_USER_DETAIL,
-    UPDATE_PROFILE_PHOTO: import.meta.env.VITE_UPDATE_PROFILE_PHOTO
+    UPDATE_PROFILE_PHOTO: import.meta.env.VITE_UPDATE_PROFILE_PHOTO,
+    AUTH_ADMIN: import.meta.env.VITE_AUTH_ADMIN,
+    REGISTER_ADMIN: import.meta.env.VITE_REGISTER_ADMIN,
+    USER_LOGOUT: import.meta.env.VITE_USER_LOGOUT
 }
 
 export default Local

@@ -78,18 +78,17 @@ const App:React.FC = () => {
     },
     {
       path: '/admin',
+      element: <AdminSignup />
+    },
+    {
+      path: '/admin/login',
+      element: <AdminLogin />
+    },
+    {
+      path: '/admin',
       element: <AdminOutlet />,
       children:
-        [
-        {
-          path: '/admin',
-          element: <AdminSignup />
-        },
-        {
-          path: '/admin/login',
-          element: <AdminLogin />
-        }
-      ]
+        []
     }
   ])
 

@@ -10,7 +10,8 @@ import { userLogin, userList, Register, addorUpdatePreference,getUserPreference,
     deleteComment,
     updateComment,
     getUser,
-    updatePersonalUser} from "../controllers/userController";
+    updatePersonalUser,
+    userLogout} from "../controllers/userController";
 import userAuthMiddleware from "../middlewares/userAuth";
 import { uploadWave } from "../utils/uploadWave";
 import { uploadProfile } from "../utils/uploadProfilePhoto";
@@ -38,6 +39,7 @@ router.get('/getfriendlist', userAuthMiddleware, userList);
 router.put('/updatepassword', userAuthMiddleware, updateUserPassword);
 router.put('/editcomment', userAuthMiddleware, updateComment);
 router.put('/deletecomment/:commentId', userAuthMiddleware, deleteComment);
+router.put('/userlogout', userAuthMiddleware, userLogout);
 
 
 export default router;

@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import "../styling/sidebar2.css"; // Optional for additional styles
 import Local from "../environment/env";
@@ -7,10 +7,12 @@ import api from "../api/axiosInstance";
 import { toast } from "react-toastify";
 
 const Sidebar2: React.FC = () => {
-  
   const navigate = useNavigate();
+  const [lastActivityTime, setLastActivityTime] = useState(Date.now());
+  const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
+
   useEffect(()=>{
-      if(!localStorage.getItem('token') && !(localStorage.getItem('isAdmin'))){
+      if(!localStorage.getItem('token')){
         navigate('/login');
       }
     },[]);
@@ -34,11 +36,51 @@ const Sidebar2: React.FC = () => {
       queryFn: getProfile,
     })
 
-  const Logout = () => {  
-      if (localStorage.getItem('token')) {
-          localStorage.clear();
-          navigate('/login');
+  const TIMEOUT = 1 * 3600 * 1000; // 1 hour in milliseconds
+
+  useEffect(() => {
+    const handleActivity = () => {
+      setLastActivityTime(Date.now()); // Reset the last activity time on any mouse/keyboard action
+      if (timer) {
+        clearTimeout(timer); // Clear the previous timeout
       }
+      const newTimer = setTimeout(() => {
+        Logout(); // Log out if no activity after TIMEOUT
+      }, TIMEOUT);
+      setTimer(newTimer); // Set the new timeout
+    };
+
+    // Event listeners for mouse and keyboard activity
+    document.addEventListener("mousemove", handleActivity);
+    document.addEventListener("keydown", handleActivity);
+
+    return () => {
+      // Clean up the event listeners on component unmount
+      document.removeEventListener("mousemove", handleActivity);
+      document.removeEventListener("keydown", handleActivity);
+      if (timer) {
+        clearTimeout(timer); // Clear any existing timer on unmount
+      }
+    };
+  }, [timer]);
+
+  const Logout = async() => {
+    try{
+      if (localStorage.getItem('token')) {
+        const response = await api.put(`${Local.USER_LOGOUT}`,{},{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        toast.success(`${response.data.message}`)
+        localStorage.clear();
+        navigate('/login');
+      }
+    }
+    catch(err:any){
+      console.log(err);
+      toast.error(`${err.response.data.message}`)
+    }
   }
 
     const getGreeting = () => {
@@ -170,8 +212,8 @@ const Sidebar2: React.FC = () => {
 
         <div className="mt-auto mb-auto text-center">
 
-            <button className="btn text-light d-flex ms-4 " onClick={()=>{
-              Logout();
+            <button className="btn text-light d-flex ms-4 " onClick={async()=>{
+              await Logout();
               }} >
                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" className="me-3" >
                     <path d="M1.00034 18.1761C1.01115 18.5609 1.09919 18.9396 1.25923 19.2898C1.41926 19.6399 1.64803 19.9543 1.93195 20.2143C2.21586 20.4743 2.54913 20.6746 2.91195 20.8033C3.27478 20.9319 3.65977 20.9864 4.04405 20.9634C6.44446 20.9768 8.84487 20.9634 11.2453 20.9634C11.3931 20.9634 11.5349 20.9047 11.6395 20.8001C11.744 20.6956 11.8027 20.5538 11.8027 20.4059C11.8027 20.2581 11.744 20.1163 11.6395 20.0118C11.5349 19.9072 11.3931 19.8485 11.2453 19.8485C8.79247 19.8485 6.33966 19.8842 3.88685 19.8485C2.65264 19.8306 2.11525 18.903 2.11525 17.7993V3.9041C2.10664 3.5532 2.20537 3.20803 2.39823 2.91476C2.59109 2.62148 2.86889 2.39407 3.19449 2.26295C3.57942 2.1579 3.97994 2.12204 4.37741 2.15703H11.2453C11.3931 2.15703 11.5349 2.0983 11.6395 1.99376C11.744 1.88921 11.8027 1.74742 11.8027 1.59958C11.8027 1.45173 11.744 1.30994 11.6395 1.20539C11.5349 1.10085 11.3931 1.04212 11.2453 1.04212C8.76571 1.04212 6.26719 0.947351 3.78985 1.04212C3.41048 1.05171 3.0368 1.13666 2.69057 1.29202C2.34433 1.44738 2.03245 1.67004 1.77307 1.94706C1.51369 2.22408 1.31199 2.54991 1.17971 2.90561C1.04744 3.2613 0.987221 3.63975 1.00257 4.01894L1.00034 18.1761Z" fill="white" stroke="white" strokeWidth="0.5"/>
@@ -220,7 +262,7 @@ const Sidebar2: React.FC = () => {
             <li><Link className="dropdown-item text-secondary" to="/app/friends">Friends</Link></li>
             <li><Link className="dropdown-item text-secondary" to="/app/create-waves">Create Waves</Link></li>
             <li><Link className="dropdown-item text-secondary" to="/app/change-password">Change Password</Link></li>
-            <li><Link className="dropdown-item text-secondary" to="#" onClick={()=>{Logout();}} >Log Out</Link></li>
+            <li><Link className="dropdown-item text-secondary" to="#" onClick={async()=>{await Logout();}} >Log Out</Link></li>
         </ul>
         </div>
         <div className="pt-2 h-100 bg-secondary-subtle rounded "> {/* Add padding-top to account for fixed navbar */}

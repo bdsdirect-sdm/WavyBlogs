@@ -6,7 +6,7 @@ const Sidebar1:React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(()=>{
-    if (localStorage.getItem('tokens') && !(localStorage.getItem('isAdmin'))) {
+    if (localStorage.getItem('token')) {
       navigate('/app/dashboard');
     }
   },[]);

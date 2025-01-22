@@ -30,7 +30,7 @@ export const adminLogin = async (req: any, res: Response):Promise<any> => {
             return res.status(401).json({ message: "Admin is already logged in" });
         }
         const token = jwt.sign({ id: admin.id }, SECRET_KEY);
-        return res.status(200).json({ "token":token });
+        return res.status(200).json({ "token":token , "message": "Admin logged in successfully" , "isAdmin":true, "admin":admin});
     }
     catch(err){
         return res.status(500).json({ message: `Internal Server Error ${err}` });

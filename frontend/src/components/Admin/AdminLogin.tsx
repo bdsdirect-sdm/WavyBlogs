@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import api from '../../api/axiosInstance';
+import Local from '../../environment/env';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 // Yup Validation Schema
 const validationSchema = Yup.object({
@@ -13,16 +17,32 @@ const validationSchema = Yup.object({
     .required('Password is required'),
 });
 
-const AdminLogin = () => {
+const AdminLogin:React.FC = () => {
+  const navigate = useNavigate();
+  const adminToken = localStorage.getItem('adminToken');
 
-    const authUser = async(data:any) => {
-        try{
-            // const response = await 
-        }
-        catch(err:any){
-            console.log(err);
-        }
+  useEffect(()=>{
+    if (adminToken) {
+      navigate('/admin/dashboard');
     }
+  },[]);
+
+ 
+  console.log(adminToken);
+  const authUser = async(data:any) => {
+    try{
+      const response = await api.post(`${Local.AUTH_ADMIN}`, data);
+      toast.success(`${response.data.message}`);
+      localStorage.setItem('isAdmin', response.data.isAdmin);
+      localStorage.setItem('adminToken', response.data.isAdmin);
+      navigate('/admin/dashboard');
+      return;
+    }
+    catch(err:any){
+      console.log(err);
+      toast.error(`${err.response.data.message}`);
+    }
+  }
 
     const loginMutation = useMutation({
         mutationFn: authUser
@@ -30,7 +50,7 @@ const AdminLogin = () => {
 
     const LoginHandeler = (values:any) => {
         console.log(values);
-        // loginMutation.mutate(values);
+        loginMutation.mutate(values);
     }
 
   return (

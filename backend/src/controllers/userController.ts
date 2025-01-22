@@ -45,6 +45,19 @@ export const userList = async(req:any, res:Response):Promise<any> => {
     }
 }
 
+export const userLogout = async(req:any, res:Response):Promise<any> => {
+    try{
+        const {uuid} = req.user;
+        const user = await User.findOne({where:{uuid}});
+        
+        await user?.update({is_login:false});
+        return res.status(200).json({"message":"Logged out successfully"});
+    }
+    catch(err){
+        res.status(500).json({'message': 'Something went wrong'});
+    }
+}
+
 // post request
 export const userLogin = async(req:any, res:Response):Promise<any> => {
     try{
@@ -91,8 +104,9 @@ export const userLogin = async(req:any, res:Response):Promise<any> => {
                             }
                         }
                     }
+                    await user.update({is_login:true});
                     const token = jwt.sign({uuid: user.uuid}, SECRET_KEY);
-                    res.status(200).json({'message': 'Login successful', "token": token, "user":user});
+                    res.status(200).json({'message': 'Login successful', "token": token, "user":user, "isAdmin":false});
                 }
             }
         }
@@ -183,6 +197,7 @@ export const updateBasicUser = async(req:any, res:Response) => {
     }
 }
 
+// post request
 export const updatePersonalUser = async(req:any, res:Response) => {
     try{
         const {uuid} = req.user;
@@ -528,6 +543,7 @@ export const updateComment = async(req:any, res:Response):Promise<any> => {
     }
 }
 
+// post request
 export const deleteComment = async(req:any, res:Response):Promise<any> => {
     try{
         const {uuid} = req.user;
@@ -541,6 +557,7 @@ export const deleteComment = async(req:any, res:Response):Promise<any> => {
     }
 }
 
+// get request
 export const getUser = async(req:any, res:Response):Promise<any> => {
     try{
         const {uuid} = req.user;

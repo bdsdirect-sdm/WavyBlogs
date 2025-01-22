@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useMutation } from '@tanstack/react-query';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../../api/axiosInstance';
+import Local from '../../environment/env';
+import { toast } from 'react-toastify';
 
 // Yup Validation Schema
 const validationSchema = Yup.object({
@@ -18,20 +21,32 @@ const validationSchema = Yup.object({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Confirm Password is required'),
-  fullName: Yup.string()
+  fullname: Yup.string()
     .min(2, 'Full Name must be at least 2 characters')
     .required('Full Name is required'),
 });
 
 
 const AdminSignup:React.FC = () => {
+  const navigate = useNavigate();
+  const adminToken = localStorage.getItem('adminToken');
+
+  useEffect(()=>{
+    if (adminToken) {
+      navigate('/admin/dashboard');
+    }
+  },[]);
 
   const addAdmin = async(data:any) => {
     try{
-
+      const response = await api.post(`${Local.REGISTER_ADMIN}`, data);
+      toast.success(`${response.data.message}`);
+      navigate('/admin/login');
+      return;
     }
     catch(err:any){
-
+      console.log(err);
+      toast.error(`${err.response.data.message}`);
     }
   }
 
@@ -42,7 +57,7 @@ const AdminSignup:React.FC = () => {
   const handlesubmit = (values:any) => {
     console.log(values);
     const {confirmPassword, ...data} = values;
-    // signupMutation.mutate(data);
+    signupMutation.mutate(data);
   }
 
   return (
@@ -58,7 +73,7 @@ const AdminSignup:React.FC = () => {
               email: '',
               password: '',
               confirmPassword: '',
-              fullName: '',
+              fullname: '',
             }}
             validationSchema={validationSchema}
             onSubmit={handlesubmit}
@@ -119,18 +134,18 @@ const AdminSignup:React.FC = () => {
               </div>
 
               <div className="mb-6">
-                <label htmlFor="fullName" className="block text-sm font-medium mb-2">
+                <label htmlFor="fullname" className="block text-sm font-medium mb-2">
                   Full Name *
                 </label>
                 <Field
                   type="text"
-                  id="fullName"
-                  name="fullName"
+                  id="fullname"
+                  name="fullname"
                   className="w-full px-4 rounded-xl text-sm transition-all duration-200 py-[1.7vh] border-[#bebebe] border-1"
                   placeholder="Enter your full name"
                 />
                 <ErrorMessage
-                  name="fullName"
+                  name="fullname"
                   component="div"
                   className="text-red-500 text-sm mt-2"
                 />
