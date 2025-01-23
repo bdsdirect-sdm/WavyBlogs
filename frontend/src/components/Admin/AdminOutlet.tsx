@@ -10,7 +10,6 @@ const AdminOutlet:React.FC = () => {
       navigate('/admin/login');
     }
   },[]);
-
   
   return (
     <>

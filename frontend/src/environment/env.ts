@@ -23,9 +23,17 @@ interface config{
     AUTH_ADMIN: string;
     REGISTER_ADMIN: string;
     USER_LOGOUT: string;
+    ADMIN_LOGOUT: string;
+    UPDATE_WAVE_STATUS: string;
+    UPDATE_USER_STATUS: string
+    UPDATE_USER: string;
+    GET_ALL_USERS: string;
+    GET_ALL_WAVES: string;
+    GET_VALUES: string;
 }
 // console.log("--------->", import.meta.env.VITE_BASE_URL)
 const Local:config = {
+    // User's APIs
     BASE_URL: import.meta.env.VITE_BASE_URL,
     CREATE_USER: import.meta.env.VITE_CREATE_USER,
     AUTH_USER: import.meta.env.VITE_AUTH_USER,
@@ -47,9 +55,18 @@ const Local:config = {
     UPDATE_PERSONAL_USER_DETAIL: import.meta.env.VITE_UPDATE_PERSONAL_USER_DETAIL,
     UPDATE_BASIC_USER_DETAIL: import.meta.env.VITE_UPDATE_BASIC_USER_DETAIL,
     UPDATE_PROFILE_PHOTO: import.meta.env.VITE_UPDATE_PROFILE_PHOTO,
+    USER_LOGOUT: import.meta.env.VITE_USER_LOGOUT,
+    
+    // Admin's APIs
     AUTH_ADMIN: import.meta.env.VITE_AUTH_ADMIN,
     REGISTER_ADMIN: import.meta.env.VITE_REGISTER_ADMIN,
-    USER_LOGOUT: import.meta.env.VITE_USER_LOGOUT
+    ADMIN_LOGOUT: import.meta.env.VITE_ADMIN_LOGOUT,
+    UPDATE_WAVE_STATUS: import.meta.env.VITE_UPDATE_WAVE_STATUS,
+    UPDATE_USER_STATUS: import.meta.env.VITE_UPDATE_USER_STATUS,
+    UPDATE_USER: import.meta.env.VITE_UPDATE_USER,
+    GET_ALL_USERS: import.meta.env.VITE_GET_ALL_USERS,
+    GET_ALL_WAVES: import.meta.env.VITE_GET_ALL_WAVES,
+    GET_VALUES: import.meta.env.VITE_GET_VALUES,
 }
 
 export default Local

@@ -16,6 +16,7 @@ import InviteFriend from './components/InviteFriend';
 import AdminSignup from './components/Admin/AdminSignup';
 import AdminOutlet from './components/Admin/AdminOutlet';
 import AdminLogin from './components/Admin/AdminLogin';
+import AdminDashboard from './components/Admin/AdminDashboard';
 
 const App:React.FC = () => {
 
@@ -88,7 +89,12 @@ const App:React.FC = () => {
       path: '/admin',
       element: <AdminOutlet />,
       children:
-        []
+        [
+          {
+            path:"/admin/dashboard",
+            element: <AdminDashboard />
+          }
+        ]
     }
   ])
 

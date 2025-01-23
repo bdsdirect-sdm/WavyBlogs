@@ -194,7 +194,7 @@ const CreateWave: React.FC = () => {
                 setSearch('');
               }}/>
             </div>
-            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" 
+            <svg width="44" height="44" className={`${orderBy=='DESC'?"":"rotate-180"}`} viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" 
             onClick={()=>{setOrderBy(orderBy=="DESC"? "ASC": "DESC")}}
             >
               <path d="M16 23H28V21H16V23ZM13 16V18H31V16H13ZM20 28H24V26H20V28Z" fill="#BEA370"/>

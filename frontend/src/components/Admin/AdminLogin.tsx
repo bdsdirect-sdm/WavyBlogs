@@ -34,7 +34,7 @@ const AdminLogin:React.FC = () => {
       const response = await api.post(`${Local.AUTH_ADMIN}`, data);
       toast.success(`${response.data.message}`);
       localStorage.setItem('isAdmin', response.data.isAdmin);
-      localStorage.setItem('adminToken', response.data.isAdmin);
+      localStorage.setItem('adminToken', response.data.token);
       navigate('/admin/dashboard');
       return;
     }
