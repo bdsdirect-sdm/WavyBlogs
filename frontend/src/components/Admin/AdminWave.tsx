@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import Local from '../../environment/env';
 import api from '../../api/axiosInstance';
 import { toast } from 'react-toastify';
@@ -8,7 +8,7 @@ import { queryClient } from '../../main';
 const AdminWave:React.FC = () => {
     const [search, setSearch] = useState('');
     const [showWave, setShowWave] = useState<any>({});
-    const [editWave, setEditWave] = useState<any>({});
+    // const [editWave, setEditWave] = useState<any>({});
 
     const updateWaveStatus = async(UUID:any) => {
         try{
@@ -19,6 +19,9 @@ const AdminWave:React.FC = () => {
             });
             queryClient.invalidateQueries({
                 queryKey: ['waves']
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['dashboarddata']
             });
             toast.success('Wave status updated successfully');
         }
@@ -57,6 +60,23 @@ const AdminWave:React.FC = () => {
                 <p>Error: {error.message}</p>
             </div>
         )
+    }
+
+    const deleteWave = async(waveId:any) => {
+        try{
+            const response = await api.delete(`${Local.DELETE_WAVE}/${waveId}`,{
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                    }
+            });
+            toast.success(`${response.data.message}`);
+            queryClient.invalidateQueries({
+                queryKey: ['waves'],
+            });
+        }
+        catch(err:any){
+            toast.error(`${err.response.data.message}`);
+        }
     }
 
   return (
@@ -107,7 +127,7 @@ const AdminWave:React.FC = () => {
 
                                 </td>
                                 <td className='d-flex justify-center '>
-                                    <i className="bi bi-eye text-[#307986] hover:cursor-pointer"
+                                    <i className="bi bi-eye me-3 text-[#307986] hover:cursor-pointer"
                                     data-bs-toggle="modal"
                                     data-bs-target="#staticBackdropShowWave"
                                     onClick={()=>{setShowWave(wave);}} 
@@ -118,7 +138,7 @@ const AdminWave:React.FC = () => {
                                     data-bs-target="#staticBackdropEditWave"
                                     onClick={()=>{setEditWave(wave);}} /> */}
 
-                                    <i className="bi bi-trash text-[#307986] hover:cursor-pointer" />
+                                    <i className="bi bi-trash text-[#307986] hover:cursor-pointer" onClick={()=>{deleteWave(wave.uuid)}} />
                                 </td>
                             </tr>
                         );

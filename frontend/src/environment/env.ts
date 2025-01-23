@@ -30,6 +30,10 @@ interface config{
     GET_ALL_USERS: string;
     GET_ALL_WAVES: string;
     GET_VALUES: string;
+    PERSONAL_UPDATE_USER: string;
+    BASIC_UPDATE_USER: string;
+    DELETE_USER: string;
+    DELETE_WAVE: string;
 }
 // console.log("--------->", import.meta.env.VITE_BASE_URL)
 const Local:config = {
@@ -67,6 +71,10 @@ const Local:config = {
     GET_ALL_USERS: import.meta.env.VITE_GET_ALL_USERS,
     GET_ALL_WAVES: import.meta.env.VITE_GET_ALL_WAVES,
     GET_VALUES: import.meta.env.VITE_GET_VALUES,
+    PERSONAL_UPDATE_USER: import.meta.env.VITE_ADMIN_PERSONAL_UPDATE_USER,
+    BASIC_UPDATE_USER: import.meta.env.VITE_ADMIN_BASIC_UPDATE_USER,
+    DELETE_USER: import.meta.env.VITE_DELETE_USER,
+    DELETE_WAVE: import.meta.env.VITE_DELETE_WAVE
 }
 
 export default Local

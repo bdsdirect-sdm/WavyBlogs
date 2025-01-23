@@ -70,8 +70,6 @@ export const adminLogout = async (req: any, res: Response):Promise<any> => {
     }
 }
 
-
-
 export const editWavestatus = async (req: any, res: Response):Promise<any> => {
     try{
         const {UUID} = req.body;
@@ -99,18 +97,6 @@ export const editUserstatus = async (req: any, res: Response):Promise<any> => {
         return res.status(500).json({ message: `Internal Server Error ${err}` });
     }
 }
-
-export const editUser = async (req: any, res: Response):Promise<any> => {
-    try{
-
-    }
-    catch(err){
-        return res.status(500).json({ message: `Internal Server Error ${err}` });
-    }
-}
-
-
-
 
 export const getAllUsers = async (req: any, res: Response):Promise<any> => {
     try{
@@ -175,5 +161,71 @@ export const getCounts = async (req: any, res: Response):Promise<any> => {
     }
     catch(err){
         return res.status(500).json({ message: `Internal Server Error ${err}` });
+    }
+}
+
+export const updateBasicUser = async(req:any, res:Response) => {
+    try{
+        const {firstname, lastname, email, phone, address_one,
+            address_two, city, state, zip_code} = req.body;
+        const user = await User.findOne({where:{email:email}});
+
+        const updatedBasicUser = await user?.update({firstname,
+            lastname,
+            email,
+            phone: phone?phone:null,
+            address_one,
+            address_two: address_two?address_two:null,
+            city,
+            state,
+            zip_code});
+        res.status(200).json({"message": "Basic details updated successfully"});
+    }
+    catch(err){
+        res.status(500).json({'message': 'Something went wrong'});
+    }
+}
+
+export const updatePersonalUser = async(req:any, res:Response) => {
+    try{
+        const {dob, gender, martial_status, social, kids, social_security } = req.body.data;
+        const userUUID = req.body.userUUID;
+        const user = await User.findByPk(userUUID);
+
+        const updatedPersonalUser = await user?.update({
+            dob,
+            gender,
+            martial_status: martial_status?martial_status:null,
+            social: social?social:null,
+            kids: kids?kids:null,
+            social_security: social_security?social_security:null
+        });
+        res.status(200).json({"message": "Personal details updated successfully"});
+    }
+    catch(err){
+        res.status(500).json({'message': 'Something went wrong'});
+    }
+}
+
+export const deleteWave = async(req:any, res:Response) => {
+    try{
+        const {UUID} = req.params;
+        const wave = await Wave.findByPk(UUID);
+        await wave?.destroy();
+        res.status(200).json({"message": "Wave deleted successfully"});
+    }
+    catch(err){
+        res.status(500).json({'message': 'Something went wrong'});
+    }
+}
+export const deleteUser = async(req:any, res:Response) => {
+    try{
+        const {UUID} = req.params;
+        const user = await User.findByPk(UUID);
+        await user?.destroy();
+        res.status(200).json({"message": "User deleted successfully"});
+    }
+    catch(err){
+        res.status(500).json({'message': 'Something went wrong'});
     }
 }

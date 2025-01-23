@@ -56,7 +56,7 @@ const AdminDashboard:React.FC = () => {
                 <div>
                     <div className='d-flex flex-wrap justify-around mt-5' >
                         
-                        <div className="card text-center mb-3 card-hover " style={{width: '15rem'}} onClick={() => {
+                        <div className="card text-center mb-3 card-hover transform hover:scale-110 transition-transform duration-300 ease-in-out " style={{width: '15rem'}} onClick={() => {
                             setUsertype(1);
                             setView(1); 
                             }}>
@@ -72,7 +72,7 @@ const AdminDashboard:React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="card text-center mb-3 card-hover " style={{width: '15rem'}} onClick={() => {
+                        <div className="card text-center mb-3 card-hover transform hover:scale-110 transition-transform duration-300 ease-in-out " style={{width: '15rem'}} onClick={() => {
                             setUsertype(2);
                             setView(1);
                             }}>
@@ -85,7 +85,7 @@ const AdminDashboard:React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="card text-center mb-3 card-hover " style={{width: '15rem'}} onClick={() => {
+                        <div className="card text-center mb-3 card-hover transform hover:scale-110 transition-transform duration-300 ease-in-out " style={{width: '15rem'}} onClick={() => {
                             setUsertype(3);
                             setView(1);
                             }}>
@@ -98,7 +98,7 @@ const AdminDashboard:React.FC = () => {
                             </div>
                         </div>
 
-                        <div className="card text-center mb-3 card-hover " style={{width: '15rem'}} onClick={() => setView(2)}>
+                        <div className="card text-center mb-3 card-hover transform hover:scale-110 transition-transform duration-300 ease-in-out " style={{width: '15rem'}} onClick={() => setView(2)}>
                             <div className="card-body p-0">
                                 <div>
                                     <i className="bi bi-bar-chart-line ms-[200px]" onClick={()=>{alert("Pie chart of user")}} />
