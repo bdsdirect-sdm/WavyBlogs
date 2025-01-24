@@ -3,13 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Response } from "express";
 import { Local } from "../environment/env";
-import Preference from "../models/Preference";
 import Wave from "../models/Wave";
-import sendInvitation from "../utils/mailer";
-import Request from "../models/Request";
-import { loginTemplate } from "../mailTemplate/loginTemplate";
-import { signupTemplate } from "../mailTemplate/signuptemplate";
-import Friend from "../models/Friend";
 import { Op } from "sequelize";
 import Admin from "../models/Admin";
 
@@ -18,7 +12,7 @@ const SECRET_KEY:any = Local.SECRET_KEY;
 export const adminLogin = async (req: any, res: Response):Promise<any> => {
     try{
         const { email, password } = req.body;
-        const admin = await Admin.findOne({ where: { email } });
+        const admin = await Admin.findOne({ where: { email }, paranoid: true });
         if (!admin) {
             return res.status(404).json({ message: "Admin not found" });
         }
@@ -111,13 +105,13 @@ export const getAllUsers = async (req: any, res: Response):Promise<any> => {
                     { email: { [Op.like]: `%${search}%` } },
                 ]},
                 {status: userType==2?true:false}
-            ]}});
+            ]}, paranoid: true});
         } else {
             users = await User.findAll({where:{[Op.or]:[
                 { firstname: { [Op.like]: `%${search}%` } },
                 { lastname: { [Op.like]: `%${search}%` } },
                 { email: { [Op.like]: `%${search}%` } },
-            ]}});
+            ]}, paranoid: true});
         }
         return res.status(200).json(users);
     }
@@ -141,7 +135,8 @@ export const getAllwaves = async (req: any, res: Response):Promise<any> => {
                         ]
                     }
                 }
-            ]
+            ],
+            paranoid: true
         });
         return res.status(200).json(waves);
     }
@@ -152,12 +147,14 @@ export const getAllwaves = async (req: any, res: Response):Promise<any> => {
 
 export const getCounts = async (req: any, res: Response):Promise<any> => {
     try{
-        const totalUsers = await User.count();
-        const activeUsers = await User.count({where:{status:true}});
-        const inactiveUsers = await User.count({where:{status:false}});
-        const totalWaves = await Wave.count();
+        const totalUsers = await User.count({paranoid: true});
+        const activeUsers = await User.count({where:{status:true}, paranoid: true});
+        const inactiveUsers = await User.count({where:{status:false}, paranoid: true});
+        const totalWaves = await Wave.count({paranoid: true});
+        const inactiveWaves = await Wave.count({where:{status:false}, paranoid: true});
+        const activeWaves = await Wave.count({where:{status:true}, paranoid: true});
 
-        res.status(200).json({"message":"Values Fetched", totalUsers, activeUsers, inactiveUsers, totalWaves});
+        res.status(200).json({"message":"Values Fetched", totalUsers, activeUsers, inactiveUsers, totalWaves, inactiveWaves, activeWaves});
     }
     catch(err){
         return res.status(500).json({ message: `Internal Server Error ${err}` });
@@ -218,6 +215,7 @@ export const deleteWave = async(req:any, res:Response) => {
         res.status(500).json({'message': 'Something went wrong'});
     }
 }
+
 export const deleteUser = async(req:any, res:Response) => {
     try{
         const {UUID} = req.params;

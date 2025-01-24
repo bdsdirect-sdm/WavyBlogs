@@ -7,19 +7,91 @@ import Button from '../common/components/CommonButton';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast } from "react-toastify";
-// const [event, setEvent] = useState(0); // 1 for add 2 for edit
+
+
+const deleteComment = async (commentUUID: any) => {
+  try {
+    await api.delete(`${Local.DELETE_COMMENT}/${commentUUID}`, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+    return commentUUID; // Return the UUID of the deleted comment
+  } catch (err: any) {
+    toast.error(`${err.response.data.message}`);
+  }
+};
+
 
 const Dashboard: React.FC = () => {
   const token = localStorage.getItem("token");
   const [getwave, setGetwave] = useState<any>({});
   const [getfriend, setGetfriend] = useState<any>({});
   const [show, setShow] = useState(0);
+  const [editComment, setEditComment] = useState<any>(0);
+  const [commentId, setCommentId] = useState<any>('');
+  const [mycomment, setMyComment] = useState<any>('');
   const [comments, setComments] = useState<any>([]);
+
+
+  const handleUpdate = async (values:any) => {
+    try {
+      const response = await api.put(`${Local.EDIT_COMMENT}/${values.commentId}`, {
+        comment: values.comment,
+      }, {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      toast.success(`${response.data.message}`);
+      setCommentId(''); // Reset the editing state
+      // Update the comments state with the new comment
+      setComments((prevComments:any) =>
+        prevComments.map((c:any) =>
+          c.uuid === values.commentId
+            ? { ...c, comment: values.comment, user_comment: { ...c.user_comment, comment: values.comment } }
+            : c
+        )
+      );
+    } catch (err: any) {
+      toast.error(`${err.response.data.message}`);
+    }
+  };
+  
+
+  // const updateComment = async(comment:any) => {
+  //   try{
+  //     const response = await api.put(`${Local.EDIT_COMMENT}/${commentId}`, {"comment":comment},{
+  //       headers: {
+  //         "Authorization": `Bearer ${token}`,
+  //         },
+  //     });
+  //     toast.success(`${response.data.message}`);
+  //   }
+  //   catch(err:any){
+  //     toast.error(`${err.response.data.message}`);
+  //   }
+  // }
+
+
+  const handleDeleteComment = async (commentUUID: any) => {
+    const deletedCommentUUID = await deleteComment(commentUUID);
+    if (deletedCommentUUID) {
+      // Filter out the deleted comment from the state
+      setComments((prevComments: any[]) =>
+        prevComments.filter((comment) => comment.uuid !== deletedCommentUUID)
+      );
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     comment: Yup.string().required("comment is required"),
     waveId: Yup.string().required()
   });
+
+  const commentValidationSchema = Yup.object().shape({
+    comment: Yup.string().required("comment is required"),
+  })
 
   const queryClient = useQueryClient();
 
@@ -42,7 +114,7 @@ const Dashboard: React.FC = () => {
     if(getwave?.uuid){
         getComments(getwave?.uuid);
     }
-  }, [getwave])
+  }, [getwave]);
 
   const getLatestWaves = async () => {
     try {
@@ -460,6 +532,9 @@ const Dashboard: React.FC = () => {
                         firstname: getwave?.user_wave?.firstname,
                         lastname: getwave?.user_wave?.lastname,
                       });
+                      setEditComment(0);
+                      setCommentId('');
+                      setMyComment('');
                     }}
                   >
                     <circle cx="9" cy="9" r="9" fill="#DECAA5" />
@@ -600,7 +675,7 @@ const Dashboard: React.FC = () => {
                     )}
               </div>
 
-              <div
+              {/* <div
                 className="ms-4 text-secondary me-2 pb-2 overflow-auto comments "
                 style={{ maxHeight: "150px" }} // Adjust the maxHeight as needed
                 >
@@ -608,13 +683,52 @@ const Dashboard: React.FC = () => {
                     (comment?.user_comment?.uuid == friends?.user?.uuid)?(
                       <div className="mb-0 pb-1 row">
                         <div className="col-10" >
-                          <b>{comment?.user_comment?.firstname} {comment?.user_comment?.lastname} : </b>{comment?.comment}
+                          {editComment?(
+                            // <>
+                            <div className="d-flex justify-between" >
+                              <div className="d-flex justify-evenly">
+                                <b>{comment?.user_comment?.firstname} {comment?.user_comment?.lastname} : </b> <input type="text" className="form-control" value={`${mycomment}`} 
+                                onKeyDown={(e:any)=>{
+                                  if(e.key == 'Enter'){
+                                    updateComment(mycomment);
+                                    setEditComment(false)
+                                  }
+                                }}
+                                onChange={(e:any)=>setMyComment(e.target.value)}
+                                />
+                              </div>
+                              <div className="">
+                                <span className='mt-1 pt-3 me-2 hover:cursor-pointer' onClick={()=>
+                                {
+                                  setEditComment(false);
+                                  }} >Cancel</span>
+
+                              </div>
+                            </div>
+                            // </>
+                          ):(
+                            <>
+                              <b>{comment?.user_comment?.firstname} {comment?.user_comment?.lastname} : </b>{comment?.comment}
+                            </>
+                          )}
                         </div>
-                        <div className="col-2 p-0" >
-                          <div className="text-primary" >
-                            {/* <span > Edit </span> | <span > Delete </span> */}
+                        {editComment==0 && (
+                          <div className="col-2 p-0" >
+                            <div className="text-primary" >
+                              <span className="hover:cursor-pointer" 
+                              onClick={()=>{
+                                setEditComment(1);
+                                setCommentId(comment?.uuid);
+                                setMyComment(comment?.comment);
+                            }} 
+                              > Edit </span> | <span className="hover:cursor-pointer" 
+                              onClick={()=>{
+                                handleDeleteComment(comment.uuid);
+                                setGetwave(getwave);
+                              }} > Delete </span>
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     ):(
                     <p className="mb-0 pb-1">
@@ -622,7 +736,69 @@ const Dashboard: React.FC = () => {
                     </p>)
                   ))}
 
-                </div>
+              </div> */}
+
+<div
+  className="ms-4 text-secondary me-2 pb-2 overflow-auto comments"
+  style={{ maxHeight: "150px" }}
+>
+  {comments?.map((comment: any) => (
+    <div className="mb-0 pb-1 row" key={comment.uuid}>
+      <div className="col-10">
+        {commentId === comment.uuid ? (
+          <>
+          <div className="d-flex">
+          <p className="btn btn-close mt-2" onClick={()=>setCommentId('')} />
+            <Formik
+              initialValues={{
+                comment: comment.comment,
+                commentId: comment.uuid,
+              }}
+              validationSchema={commentValidationSchema}
+              onSubmit={handleUpdate}
+            >
+              <Form className="d-flex ms-3">
+                <Field name="comment" className="form-control" type="text" />
+                <ErrorMessage component="div" name="comment" />
+                <Field name="commentId" type="text" hidden/>
+                <button type="submit" className="btn btn-primary ms-4">update</button>
+              </Form>
+            </Formik>
+
+          </div>
+          </>
+        ) : (
+          <>
+            <b>
+              {comment.user_comment.firstname} {comment.user_comment.lastname}:{" "}
+            </b>
+            {comment.comment}
+          </>
+        )}
+      </div>
+      <div className="col-2 p-0">
+        <div className="text-primary">
+          <span
+            className="hover:cursor-pointer"
+            onClick={() => setCommentId(comment.uuid)}
+          >
+            Edit
+          </span>{" "}
+          |{" "}
+          <span
+            className="hover:cursor-pointer"
+            onClick={() => {
+              handleDeleteComment(comment.uuid);
+              setGetwave(getwave);
+            }}
+          >
+            Delete
+          </span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
 
             </div>
           </div>

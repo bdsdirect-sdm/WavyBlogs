@@ -100,7 +100,7 @@ const Preferences:React.FC = () => {
   }
 
   return (
-    <div className="container">
+    <div className="container w-[77vw]">
       <GoBack text="Preferences"/>
 
       <div className="bg-white p-4 rounded">

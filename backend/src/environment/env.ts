@@ -12,7 +12,7 @@ export const Local:any = {
     DB_DIALECT: process.env.DB_DIALECT,
     MAIL_PASS: process.env.MAIL_PASS,
     MAIL_USER: process.env.MAIL_USER,
-    BASE_URL: process.env.BASE_URL,
+    CLIENT_BASE_URL: process.env.BASE_URL,
     LOGIN_URL: process.env.LOGIN_URL,
     SIGNUP_URL: process.env.SIGNUP_URL,
     CRYPTO_SECRET_KEY: process.env.CRYPTO_SECRET_KEY

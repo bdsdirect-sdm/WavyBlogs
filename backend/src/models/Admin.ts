@@ -48,14 +48,12 @@ Admin.init({
     isDeleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-    },
-    deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
     }
 },{
     modelName: 'Admin',
-    sequelize
+    sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 export default Admin;

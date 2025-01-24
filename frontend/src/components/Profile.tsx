@@ -112,7 +112,7 @@ const Profile: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='w-[77vw]'>
       <GoBack text='Profile' />
 
       <div className='mx-2 mt-2 rounded'>
@@ -235,13 +235,13 @@ const Profile: React.FC = () => {
                     </div>
                     <div className='row mb-3'>
                       <div className='col-md-6'>
-                        <label className='form-label text-sm'>Email <span className='text-danger' >*</
-                        span> </label>
+                        <label className='form-label text-sm'>Email <span className='text-danger' >*</span> </label>
                         <Field
                         type='email'
                         name='email'
                         className='form-control'
                         placeholder='Enter your email'
+                        disabled
                         />
                         <ErrorMessage
                         name='email'

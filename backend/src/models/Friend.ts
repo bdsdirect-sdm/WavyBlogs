@@ -30,13 +30,12 @@ Friend.init({
         defaultValue: false,
         allowNull: false
     },
-    deletedAt:{
-        type: DataTypes.DATE,
-        allowNull: true
-    }
+    
 },{
     modelName: 'Friend',
-    sequelize
+    sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 User.hasMany(Friend, { foreignKey:'user_1_Id', as:'friend_1', onDelete:'CASCADE', onUpdate:"CASCADE" });

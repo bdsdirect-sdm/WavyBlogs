@@ -34,7 +34,8 @@ export const userList = async(req:any, res:Response):Promise<any> => {
                     model: User,
                     as: 'friend_2',
                 }
-            ]
+            ],
+            paranoid: true
         }
     );
 
@@ -64,7 +65,7 @@ export const userLogin = async(req:any, res:Response):Promise<any> => {
         const {email, password} = req.body.formData;
         const {data} = req.body;
         // console.log(data);
-        const user = await User.findOne({where: {email: email}});
+        const user = await User.findOne({where: {email: email}, paranoid: true});
         if(!user){
             res.status(401).json({'message': 'Invalid email'});
         }
@@ -413,7 +414,8 @@ export const getMyWaves = async(req:any, res:any) => {
             ]},
             {userId: uuid}
         ]},
-        order: [["isactive", orderBy]]
+        order: [["isactive", orderBy]],
+        paranoid: true
     });
         if(waves){
             return res.status(200).json(waves);
@@ -451,7 +453,8 @@ export const getLatestWaves = async(req:any, res:Response):Promise<any> => {
                 //         }
                 //     ]
                 // }
-            ]
+            ],
+            paranoid: true
           });
         if(waves){
             return res.status(200).json({ "message": "Waves are fetched", "waves": waves});
@@ -478,7 +481,8 @@ export const getComments = async(req:any, res:Response):Promise<any> => {
                     model: User,
                     as: 'user_comment'
                 }
-            ]
+            ],
+            paranoid: true
         });
         return res.json({"comments":comments});
     }
@@ -500,7 +504,8 @@ export const getRequests = async(req:any, res:any) => {
                 {firstname: {[Op.like]: `%${search}%`}},
                 {lastname: {[Op.like]: `%${search}%`}},
             ]}]},
-            order:[["createdAt", `${req.query.orderBy}`]]
+            order:[["createdAt", `${req.query.orderBy}`]],
+            paranoid: true
         });
         return res.status(200).json({ message:"Requests are fetched", requests});
     }
@@ -531,8 +536,8 @@ export const addComment = async(req:any, res:Response):Promise<any> =>{
 //post request
 export const updateComment = async(req:any, res:Response):Promise<any> => {
     try{
-        const {uuid} = req.user;
-        const {comment, commentId} = req.body;
+        const {commentId} = req.params;
+        const {comment} = req.body;
         const updatedComment = await Comment.update({comment}, {where: {uuid: commentId}});
         if(updatedComment){
             res.status(200).json({"message": "Comment updated successfully"});
@@ -546,9 +551,9 @@ export const updateComment = async(req:any, res:Response):Promise<any> => {
 // post request
 export const deleteComment = async(req:any, res:Response):Promise<any> => {
     try{
-        const {uuid} = req.user;
         const {commentId} = req.params;
-        await Comment.update({status:false}, {where: {uuid: commentId}});
+        const comment = await Comment.findOne({where: {uuid: commentId}});
+        await comment?.destroy();
         
         return res.status(200).json({"message": "Comment deleted successfully"});
     }

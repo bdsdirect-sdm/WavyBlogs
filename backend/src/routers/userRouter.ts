@@ -37,9 +37,9 @@ router.get('/getpreference', userAuthMiddleware, getUserPreference);
 router.get('/getfriendlist', userAuthMiddleware, userList);
 
 router.put('/updatepassword', userAuthMiddleware, updateUserPassword);
-router.put('/editcomment', userAuthMiddleware, updateComment);
-router.put('/deletecomment/:commentId', userAuthMiddleware, deleteComment);
 router.put('/userlogout', userAuthMiddleware, userLogout);
+router.put('/editcomment/:commentId', userAuthMiddleware, updateComment);
 
+router.delete('/deletecomment/:commentId', userAuthMiddleware, deleteComment);
 
 export default router;

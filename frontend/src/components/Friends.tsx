@@ -48,7 +48,7 @@ const Friends:React.FC = () => {
   console.log(data);
 
   return (
-    <div>
+    <div className='w-[77vw]'>
       <GoBack text="Friends" />
 
       <div className='m-2 bg-white p-3 rounded ' >

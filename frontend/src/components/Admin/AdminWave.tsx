@@ -245,7 +245,7 @@ const AdminWave:React.FC = () => {
                                     />
                                 </div>
                                 {showWave.video && (
-                                <div className="carousel-item px-5" style={{ margin: '20px', padding: '10px' }}>
+                                    <div className="carousel-item px-5" style={{ margin: '20px', padding: '10px' }}>
                                     <video src={`${Local.BASE_URL}${showWave?.video}`} className="d-block mt-4 "
                                     controls
                                     style={{ width: "360px", height:"170px"}}/>

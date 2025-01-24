@@ -117,13 +117,11 @@ User.init({
         defaultValue: false,
         allowNull: false
     },
-    deletedAt:{
-        type: DataTypes.DATE,
-        allowNull: true
-    }
 }, {
     modelName: 'User',
     sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 export default User;

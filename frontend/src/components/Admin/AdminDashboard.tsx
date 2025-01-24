@@ -7,8 +7,10 @@ import AdminNavbar from './AdminNavbar';
 import { toast } from 'react-toastify';
 import api from '../../api/axiosInstance';
 import Local from '../../environment/env';
+import ShowPie from '../../charts/ShowPie';
 
 const AdminDashboard:React.FC = () => {
+    const [showChart, setShowChart] = React.useState<any>(0); // 1: user, 2: wave
     const [view, setView] = React.useState(1); // 1 for users 2 for waves
     const [userType, setUsertype] = React.useState(1); // 1 for All users 2 for Active Users 3 for All Users
 
@@ -44,6 +46,8 @@ const AdminDashboard:React.FC = () => {
         )
     }
 
+    // console.log("data===>", data);
+
   return (
     <>
         <AdminNavbar />
@@ -62,7 +66,10 @@ const AdminDashboard:React.FC = () => {
                             }}>
                             <div className="card-body p-0">
                                 <div className=''>
-                                    <i className="bi bi-bar-chart-line ms-[200px]" onClick={()=>{alert("Pie chart of user")}} />
+                                    <i className="bi bi-bar-chart-line ms-[200px]"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdropChart"
+                                    onClick={()=>{setShowChart(1); }}/>
                                 </div>
                                 <div className=' mt-2 text-[#3E5677]'>
                                     <p className="text-[11.5px] mt-auto uppercase">Total Users</p>
@@ -101,7 +108,10 @@ const AdminDashboard:React.FC = () => {
                         <div className="card text-center mb-3 card-hover transform hover:scale-110 transition-transform duration-300 ease-in-out " style={{width: '15rem'}} onClick={() => setView(2)}>
                             <div className="card-body p-0">
                                 <div>
-                                    <i className="bi bi-bar-chart-line ms-[200px]" onClick={()=>{alert("Pie chart of user")}} />
+                                    <i className="bi bi-bar-chart-line ms-[200px]"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdropChart"
+                                    onClick={()=>{setShowChart(2)}} />
                                 </div>
                                 <div className=' mt-4 text-[#3E5677]'>
                                     <p className="text-[11.5px] mt-auto uppercase">Total Waves</p>
@@ -121,6 +131,22 @@ const AdminDashboard:React.FC = () => {
                 {view==1? (<AdminUser userType={`${userType}`} />) : (<AdminWave />)}
             </div>
         </div>
+
+        {showChart!=0 && (
+            <div className="modal fade" id="staticBackdropChart" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex={-1} aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                  <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div className="modal-body">
+                    <ShowPie label={`${showChart==1? "Users":"Waves"}` } value={showChart==1? [data?.activeUsers, data?.inactiveUsers]:[data?.inactiveWaves, data?.totalWaves]} />
+                </div>
+              </div>
+            </div>
+          </div> 
+        ) }
     </>
   )
 }

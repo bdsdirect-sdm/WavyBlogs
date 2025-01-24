@@ -146,15 +146,13 @@ Preference.init(
     is_deleted:{
         type: DataTypes.BOOLEAN,
         defaultValue:false
-    },
-    deletedAt:{
-        type: DataTypes.DATE,
-        allowNull:true
-  }
+    }
 },
   {
     modelName: "Preference",
-    sequelize
+    sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
   }
 );
 

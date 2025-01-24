@@ -99,7 +99,7 @@ const Sidebar2: React.FC = () => {
       }
 
   return (
-    <div className="d-flex vh-100">
+    <div className="d-flex vh-100 position-fixed">
       {/* Sidebar */}
       <div className="cmn-bg text-white d-flex flex-column p-3 z-auto" style={{ width: "250px", height:'111%' }}>
         <div className="mb-4 ms-5">

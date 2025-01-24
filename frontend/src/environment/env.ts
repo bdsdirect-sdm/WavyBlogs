@@ -1,80 +1,43 @@
-interface config{
-    BASE_URL: string;
-    CREATE_USER: string;
-    AUTH_USER: string;
-    CREATE_WAVE: string;
-    GET_MY_WAVES: string;
-    GET_REQUESTS: string;
-    INVITE_FRIEND: string;
-    SECRET_KEY: string;
-    GET_LATEST_WAVES: string;
-    GET_COMMENTS: string;
-    GET_PREFERENCE: string;
-    UPDATE_PREFERENCE: string;
-    EDIT_PASSWORD: string;
-    GET_FRIENDS: string;
-    ADD_COMMENT: string;
-    EDIT_COMMENT: string;
-    DELETE_COMMENT: string;
-    GET_PROFILE: string;
-    UPDATE_PERSONAL_USER_DETAIL: string;
-    UPDATE_BASIC_USER_DETAIL: string;
-    UPDATE_PROFILE_PHOTO: string;
-    AUTH_ADMIN: string;
-    REGISTER_ADMIN: string;
-    USER_LOGOUT: string;
-    ADMIN_LOGOUT: string;
-    UPDATE_WAVE_STATUS: string;
-    UPDATE_USER_STATUS: string
-    UPDATE_USER: string;
-    GET_ALL_USERS: string;
-    GET_ALL_WAVES: string;
-    GET_VALUES: string;
-    PERSONAL_UPDATE_USER: string;
-    BASIC_UPDATE_USER: string;
-    DELETE_USER: string;
-    DELETE_WAVE: string;
-}
-// console.log("--------->", import.meta.env.VITE_BASE_URL)
-const Local:config = {
+const configData = {
     // User's APIs
-    BASE_URL: import.meta.env.VITE_BASE_URL,
-    CREATE_USER: import.meta.env.VITE_CREATE_USER,
-    AUTH_USER: import.meta.env.VITE_AUTH_USER,
-    CREATE_WAVE: import.meta.env.VITE_CREATE_WAVE,
-    GET_MY_WAVES: import.meta.env.VITE_GET_MY_WAVES,
-    GET_REQUESTS: import.meta.env.VITE_GET_REQUESTS,
-    INVITE_FRIEND: import.meta.env.VITE_INVITE_FRIEND,
-    SECRET_KEY: import.meta.env.VITE_CRYPTO_SECRET_KEY,
-    GET_LATEST_WAVES: import.meta.env.VITE_GET_LATEST_WAVES,
-    GET_COMMENTS: import.meta.env.VITE_GET_COMMENTS,
-    GET_PREFERENCE: import.meta.env.VITE_GET_PREFERENCE,
-    UPDATE_PREFERENCE: import.meta.env.VITE_UPDATE_PREFERENCE,
-    EDIT_PASSWORD: import.meta.env.VITE_EDIT_PASSWORD,
-    GET_FRIENDS: import.meta.env.VITE_GET_FRIENDS,
-    ADD_COMMENT: import.meta.env.VITE_ADD_COMMENT,
-    EDIT_COMMENT: import.meta.env.VITE_EDIT_COMMENT,
-    DELETE_COMMENT: import.meta.env.VITE_DELETE_COMMENT,
-    GET_PROFILE: import.meta.env.VITE_GET_PROFILE,
-    UPDATE_PERSONAL_USER_DETAIL: import.meta.env.VITE_UPDATE_PERSONAL_USER_DETAIL,
-    UPDATE_BASIC_USER_DETAIL: import.meta.env.VITE_UPDATE_BASIC_USER_DETAIL,
-    UPDATE_PROFILE_PHOTO: import.meta.env.VITE_UPDATE_PROFILE_PHOTO,
-    USER_LOGOUT: import.meta.env.VITE_USER_LOGOUT,
-    
+    BASE_URL: "http://localhost:4000/", // Base URL for the API
+    CREATE_USER: "signup", // API endpoint for creating a new user
+    AUTH_USER: "login", // API endpoint for user login
+    CREATE_WAVE: "addwave", // API endpoint for creating a new wave
+    GET_MY_WAVES: "getmywave", // API endpoint to get user's waves
+    GET_REQUESTS: "getrequests", // API endpoint to get user requests
+    INVITE_FRIEND: "invite-friend", // API endpoint to invite a friend
+    SECRET_KEY: "dK2JG6hi7ghH7HfuiytbkU7578PmbhJGJok3r43", // Secret key for encryption
+    GET_LATEST_WAVES: "getlatestwaves", // API endpoint to get the latest waves
+    GET_COMMENTS: "getcomments", // API endpoint to get comments
+    GET_PREFERENCE: "getpreference", // API endpoint to get user preferences
+    UPDATE_PREFERENCE: "updatepreference", // API endpoint to update user preferences
+    EDIT_PASSWORD: "updatepassword", // API endpoint to update user password
+    GET_FRIENDS: "getfriendlist", // API endpoint to get user friends
+    ADD_COMMENT: "addcomment", // API endpoint to add a new comment
+    EDIT_COMMENT: "editcomment", // API endpoint to edit a comment
+    DELETE_COMMENT: "deletecomment", // API endpoint to delete a comment
+    GET_PROFILE: "getprofile", // API endpoint to get user profile
+    UPDATE_PERSONAL_USER_DETAIL: "updatepersonaldetails", // API endpoint to update personal user details
+    UPDATE_BASIC_USER_DETAIL: "updatebasicdetails", // API endpoint to update basic user details
+    UPDATE_PROFILE_PHOTO: "updateprofilephoto", // API endpoint to update user profile photo
+    USER_LOGOUT: "userlogout", // API endpoint for user logout
+  
     // Admin's APIs
-    AUTH_ADMIN: import.meta.env.VITE_AUTH_ADMIN,
-    REGISTER_ADMIN: import.meta.env.VITE_REGISTER_ADMIN,
-    ADMIN_LOGOUT: import.meta.env.VITE_ADMIN_LOGOUT,
-    UPDATE_WAVE_STATUS: import.meta.env.VITE_UPDATE_WAVE_STATUS,
-    UPDATE_USER_STATUS: import.meta.env.VITE_UPDATE_USER_STATUS,
-    UPDATE_USER: import.meta.env.VITE_UPDATE_USER,
-    GET_ALL_USERS: import.meta.env.VITE_GET_ALL_USERS,
-    GET_ALL_WAVES: import.meta.env.VITE_GET_ALL_WAVES,
-    GET_VALUES: import.meta.env.VITE_GET_VALUES,
-    PERSONAL_UPDATE_USER: import.meta.env.VITE_ADMIN_PERSONAL_UPDATE_USER,
-    BASIC_UPDATE_USER: import.meta.env.VITE_ADMIN_BASIC_UPDATE_USER,
-    DELETE_USER: import.meta.env.VITE_DELETE_USER,
-    DELETE_WAVE: import.meta.env.VITE_DELETE_WAVE
-}
-
-export default Local
+    AUTH_ADMIN: "adminauth", // API endpoint for admin authentication
+    REGISTER_ADMIN: "adminregister", // API endpoint for registering an admin
+    ADMIN_LOGOUT: "adminlogout", // API endpoint for admin logout
+    UPDATE_WAVE_STATUS: "editwavestatus", // API endpoint to update wave status
+    UPDATE_USER_STATUS: "edituserstatus", // API endpoint to update user status
+    UPDATE_USER: "edituser", // API endpoint to update user details
+    GET_ALL_USERS: "allusers", // API endpoint to get all users
+    GET_ALL_WAVES: "allwaves", // API endpoint to get all waves
+    GET_VALUES: "getdata", // API endpoint to get various data
+    PERSONAL_UPDATE_USER: "editadminpersonaluser", // API endpoint for admin to update personal user details
+    BASIC_UPDATE_USER: "editadminbasicuser", // API endpoint for admin to update basic user details
+    DELETE_USER: "deleteuser", // API endpoint to delete a user
+    DELETE_WAVE: "deletewave" // API endpoint to delete a wave
+  };
+  
+  export default configData;
+  

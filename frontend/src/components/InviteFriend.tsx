@@ -55,7 +55,7 @@ const InviteFriend: React.FC = () => {
   };
 
   return (
-    <div className="h-100" >
+    <div className="h-100 w-[77vw]" >
       <GoBack text="Friends" />
       <span className="ms-5 fw-bold text-secondary ">
         Invite some friends, show them your Waves and let's see what they can do!

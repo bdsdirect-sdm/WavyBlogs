@@ -44,14 +44,12 @@ Wave.init({
     isDeleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
-    },
-    deletedAt: {
-        type: DataTypes.DATE,
-        allowNull: true,
-    },
+    }
 },{
     modelName: 'Wave',
-    sequelize
+    sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 User.hasMany(Wave, { foreignKey: 'userId', as: 'user_wave', onDelete: 'CASCADE', onUpdate: 'CASCADE' });

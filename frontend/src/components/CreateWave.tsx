@@ -90,7 +90,7 @@ const CreateWave: React.FC = () => {
   }
 
   return (
-    <div>
+    <div className='w-[77vw]'>
       <GoBack text="Create Waves" />
 
       <div className="mx-2 mt-2 rounded">

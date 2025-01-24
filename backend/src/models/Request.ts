@@ -59,10 +59,6 @@ Request.init({
         defaultValue: false,
         allowNull: false
     },
-    deletedAt:{
-        type: DataTypes.DATE,
-        allowNull: true
-    },
     sent_to:{
         type: DataTypes.UUID,
         references: {
@@ -79,7 +75,9 @@ Request.init({
     }
 },{
     modelName: 'Request',
-    sequelize
+    sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 User.hasMany(Request, { foreignKey:'sent_by', as:'sent_by_user', onDelete:'CASCADE', onUpdate:"CASCADE" });

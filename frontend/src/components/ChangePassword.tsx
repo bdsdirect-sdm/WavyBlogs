@@ -55,7 +55,7 @@ const ChangePassword:React.FC = () => {
     updatePasswordMutation.mutate(data);
   }
   return (
-    <div>
+    <div className='w-[77vw]' >
       <div>
         <GoBack text="Change Passwords" />
       </div>

@@ -32,14 +32,12 @@ Comment.init({
     is_deleted:{
         type: DataTypes.BOOLEAN,
         defaultValue:false
-    },
-    deletedAt:{
-        type: DataTypes.DATE,
-        allowNull:true
-  }
+    }
 },{
     modelName: "Comment",
     sequelize,
+    paranoid: true,
+    deletedAt: 'deletedAt'
 })
 
 Wave.hasMany(Comment, { foreignKey: "waveId", as:'wave_comment', onDelete: "CASCADE", onUpdate:"CASCADE" });
